@@ -11,7 +11,6 @@
     <style>
         body {
             font-family: 'Prompt', sans-serif;
-            /* ปรับเป็นโทนเหลืองเลม่อน-น้ำตาล */
             background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
             min-height: 100vh;
         }
@@ -20,26 +19,31 @@
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-15px) rotate(10deg); }
         }
-        @keyframes float-left-right {
-            0%, 100% { transform: translateX(0px) rotate(0deg); }
-            50% { transform: translateX(15px) rotate(-10deg); }
+        @keyframes float-heart {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
         }
         @keyframes pulse-soft {
             0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 1; }
         }
-        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
         @keyframes dash-animation {
             from { stroke-dashoffset: 0; }
             to { stroke-dashoffset: -24; }
         }
+
         .animate-dash { animation: dash-animation 1s linear infinite; }
         .anim-float-1 { animation: float-up-down 4s ease-in-out infinite; }
-        .anim-float-2 { animation: float-up-down 5s ease-in-out infinite 1.5s; }
-        .anim-float-3 { animation: float-left-right 6s ease-in-out infinite; }
-        .anim-float-4 { animation: float-left-right 4.5s ease-in-out infinite 2s; }
         .anim-pulse { animation: pulse-soft 3s ease-in-out infinite; }
-        .anim-spin { animation: spin-slow 8s linear infinite; }
+        
+        /* หัวใจลอยรอบกรอบลิ้งค์ */
+        .heart-particle {
+            position: absolute;
+            animation: float-heart 3s ease-out infinite;
+            color: #eab308;
+            pointer-events: none;
+        }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.9);
@@ -52,7 +56,7 @@
 
         .virtual-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .virtual-card:hover { transform: translateY(-4px); }
-        .virtual-card:active { transform: translateY(2px) scale(0.98); }
+        
         ::-webkit-scrollbar { width: 0px; }
     </style>
     
@@ -62,19 +66,12 @@
                 extend: {
                     colors: {
                         lemon: {
-                            50: '#fefce8',
-                            100: '#fef9c3',
-                            200: '#fef08a',
-                            300: '#fde047',
-                            400: '#facc15',
-                            500: '#eab308',
+                            50: '#fefce8', 100: '#fef9c3', 200: '#fef08a',
+                            300: '#fde047', 400: '#facc15', 500: '#eab308',
                         },
                         brown: {
-                            300: '#d4b49e',
-                            400: '#bc9680',
-                            500: '#8b5e3c',
-                            600: '#5c3d26',
-                            700: '#452e1f',
+                            300: '#d4b49e', 400: '#bc9680', 500: '#8b5e3c',
+                            600: '#5c3d26', 700: '#452e1f',
                         }
                     }
                 }
@@ -86,50 +83,31 @@
 
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <svg class="absolute top-[5%] left-[10%] w-8 h-8 text-lemon-400/40 anim-float-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-        <svg class="absolute top-[15%] left-[2%] w-6 h-6 text-white/80 anim-pulse" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        <svg class="absolute top-[8%] left-[25%] w-4 h-4 text-brown-300/30 anim-float-3" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>
         <svg class="absolute top-[40%] -left-2 w-12 h-12 text-lemon-200/50 anim-pulse" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        <svg class="absolute bottom-[5%] right-[15%] w-7 h-7 text-white/70 anim-float-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
     </div>
 
     <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-brown-600/95 backdrop-blur-sm text-lemon-50 px-6 py-3 rounded-full shadow-xl transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-50 flex items-center gap-2 font-medium text-sm border border-lemon-400">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-lemon-300">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
         คัดลอกเลขบัญชีแล้ว
     </div>
 
     <div class="max-w-[420px] w-full relative z-10 space-y-5 pb-10">
         
         <div class="flex justify-center gap-2 mb-2">
-            <span class="px-3 py-1 bg-white/60 rounded-full text-[10px] font-bold text-brown-500 border border-lemon-200 shadow-sm">Verified</span>
+            <span class="px-3 py-1 bg-white/60 rounded-full text-[10px] font-bold text-brown-500 border border-lemon-200 shadow-sm">Verified Shop</span>
             <span class="px-3 py-1 bg-lemon-500 text-white rounded-full text-[10px] font-bold shadow-sm">Fast Respond</span>
-            <span class="px-3 py-1 bg-white/60 rounded-full text-[10px] font-bold text-brown-500 border border-lemon-200 shadow-sm">Ready to Service</span>
-        </div>
-        <div class="text-center pt-2 pb-2 relative">
-            <h1 class="text-2xl font-bold tracking-tight text-brown-600 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-lemon-500 anim-pulse">
-                    <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                </svg>
-                Bibimint Shop
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-lemon-500 anim-pulse transform -scale-x-100">
-                    <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                </svg>
-            </h1>
-            <p class="text-sm font-medium text-brown-400 mt-1">Payment & Checkout</p>
+            <span class="px-3 py-1 bg-white/60 rounded-full text-[10px] font-bold text-brown-500 border border-lemon-200 shadow-sm">Community</span>
         </div>
 
-        <div class="bg-white/40 border border-lemon-200 rounded-2xl p-3 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span class="text-[11px] font-bold text-brown-600 uppercase tracking-wider">Queue Status: Available</span>
-            </div>
-            <span class="text-[10px] font-medium text-brown-400">เช็คคิวล่าสุดเมื่อ 1 นาทีที่แล้ว</span>
+        <div class="text-center pt-2 pb-2 relative">
+            <h1 class="text-2xl font-bold tracking-tight text-brown-600 flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-lemon-500 anim-pulse"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" /></svg>
+                Bibimint Shop
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-lemon-500 anim-pulse transform -scale-x-100"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" /></svg>
+            </h1>
+            <p class="text-sm font-medium text-brown-400 mt-1">Payment & Joining Community</p>
         </div>
 
         <div class="glass-card rounded-[40px] p-3 relative z-10">
-            <svg class="absolute -top-4 -left-2 w-9 h-9 text-lemon-500 anim-float-1 z-20 drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-
             <div class="relative p-2 rounded-[36px] z-10">
                 <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="34" fill="none" stroke="#eab308" stroke-width="2.5" stroke-dasharray="12 12" stroke-linecap="round" class="animate-dash" />
@@ -142,110 +120,110 @@
             <div class="p-4 pt-6 space-y-5">
                 <div class="text-center space-y-3">
                     <p class="text-[15px] font-medium leading-relaxed text-brown-600">
-                        เลขบัญชีตามนี้เลยค่า
-                        <br>ชื่อบัญชี <span class="text-brown-700 font-bold bg-lemon-200/80 px-2.5 py-0.5 rounded-lg border border-lemon-300 relative inline-block">
-                            ศิริประภา บุญธรรมมา
-                        </span>
+                        เลขบัญชี <span class="text-brown-700 font-bold bg-lemon-200/80 px-2.5 py-0.5 rounded-lg border border-lemon-300 inline-block">ศิริประภา บุญธรรมมา</span>
                         <br><span class="text-brown-500 font-bold text-[13px]">ต้องมีชื่อร้าน Bibimint เท่านั้นน้า!!</span>
                     </p>
-
-                    <a href="#" class="inline-flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed border-lemon-400 rounded-2xl text-[13px] font-bold text-brown-600 hover:bg-lemon-50 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                        คลิกเพื่อเช็คคิวงานปัจจุบัน
-                    </a>
+                    
+                    <div class="relative py-2">
+                        <div class="heart-particle" style="top:0; left:10%; animation-delay: 0s;">❤</div>
+                        <div class="heart-particle" style="top:10%; right:15%; animation-delay: 1s;">❤</div>
+                        <div class="heart-particle" style="bottom:0; left:50%; animation-delay: 2s;">❤</div>
+                        
+                        <div class="bg-brown-600 rounded-3xl p-5 text-center shadow-lg border-2 border-lemon-400 relative overflow-hidden group">
+                            <div class="relative z-10">
+                                <h3 class="text-lemon-300 font-bold text-sm mb-1 uppercase tracking-widest">Community Links</h3>
+                                <p class="text-lemon-50/80 text-[11px] mb-4">กลุ่มที่เข้ากับมิ้นได้ กดลิ้งค์ด้านล่างได้เลยค่า</p>
+                                <a href="https://linkbio.co/bibimintshop" target="_blank" class="inline-flex items-center gap-2 bg-lemon-500 text-brown-700 font-bold px-6 py-3 rounded-2xl shadow-md hover:bg-lemon-400 transition-all transform hover:scale-105 active:scale-95">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" /></svg>
+                                    เข้ากลุ่ม Bibimint Shop
+                                </a>
+                            </div>
+                            <div class="absolute inset-0 opacity-10 pointer-events-none flex flex-wrap justify-around items-center">
+                                <div class="text-4xl text-white">❤</div><div class="text-2xl text-white">❤</div><div class="text-5xl text-white">❤</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              <div class="space-y-4">
-                    <div class="virtual-card relative bg-gradient-to-br from-brown-500 to-brown-700 rounded-[24px] p-5 shadow-lg shadow-brown-500/20 overflow-hidden cursor-pointer border border-brown-400/30" onclick="copyText('0743132475', this, 'kbank')">
+
+                <div class="space-y-4">
+                    <div class="virtual-card relative bg-gradient-to-br from-brown-500 to-brown-700 rounded-[24px] p-5 shadow-lg border border-brown-400/30 cursor-pointer" onclick="copyText('0743132475', this)">
                         <div class="relative z-10 flex flex-col gap-4">
                             <div class="flex justify-between items-center">
-                                <div class="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20">
-                                    <span class="text-white font-bold text-sm tracking-wider">KBank</span>
-                                </div>
-                                <button class="kbank-btn bg-lemon-400 text-brown-700 text-[12px] font-bold px-4 py-2 rounded-full flex items-center gap-1.5 shadow-sm pointer-events-none">
-                                    คัดลอก
-                                </button>
+                                <span class="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full text-white font-bold text-sm">KBank</span>
+                                <button class="kbank-btn bg-lemon-400 text-brown-700 text-[12px] font-bold px-4 py-2 rounded-full">คัดลอก</button>
                             </div>
-                            <div class="mt-2">
-                                <div class="text-lemon-50/90 text-[11px] font-medium mb-1 drop-shadow-sm">กสิกรไทย (ศิริประภา)</div>
-                                <div class="text-white font-bold text-[22px] tracking-widest leading-none drop-shadow-md">074-3-13247-5</div>
+                            <div>
+                                <div class="text-lemon-50/90 text-[11px] mb-1 uppercase">SIRIPRAPHA BUNTHAMMA</div>
+                                <div class="text-white font-bold text-[22px] tracking-widest">074-3-13247-5</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="relative bg-gradient-to-br from-lemon-100 to-yellow-50 rounded-[20px] p-4 border-2 border-dashed border-lemon-400 shadow-sm z-10 overflow-hidden transform transition-transform hover:scale-[1.02]">
-                        <div class="flex items-start gap-3 relative z-10">
-                            <div class="bg-brown-500 p-1.5 rounded-full shadow-md text-lemon-200 flex-shrink-0 mt-1 animate-bounce">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3.5 h-3.5">
-                                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                            </div>
-                            <div class="text-[11.5px] text-brown-700 leading-relaxed text-left flex-1">
-                                <span class="inline-block bg-brown-600 text-lemon-100 text-[9px] font-bold px-2 py-0.5 rounded-full mb-1.5 tracking-wider shadow-sm">Wallet Notice</span><br>
-                                <span class="font-bold text-brown-600">ยังไม่เปิดรับวอเลตโดยตรง</span> หากต้องการโอนจริง ๆ รบกวน <span class="bg-white px-1.5 py-0.5 rounded-md text-brown-600 font-bold border border-lemon-300 shadow-sm">+25 บาท</span> ต่อรายการนะคะ
-                                <br><span class="text-brown-500 text-[10px] mt-1 block leading-snug">เนื่องจากค่าธรรมเนียมสูงมาก แนะนำแสกนเข้าธนาคารได้เลยค่ะ</span>
-                            </div>
+                    <div class="bg-lemon-100/50 border-2 border-dashed border-lemon-400 rounded-3xl p-4 flex gap-3">
+                        <div class="bg-brown-500 p-2 rounded-full text-lemon-200 self-start animate-pulse">!</div>
+                        <div class="text-[11px] text-brown-600 leading-relaxed">
+                            <span class="font-bold text-brown-700">Wallet Note:</span> ยังไม่เปิดรับวอเลตโดยตรง หากจำเป็นต้องโอน <span class="bg-white px-1 font-bold text-brown-700">+25 บาท</span> ต่อรายการนะคะ แนะนำสแกนเข้าธนาคารดีกว่าค่า
                         </div>
                     </div>
-                    <div class="bg-white/60 border border-lemon-200 rounded-2xl p-3 flex items-start gap-3 text-left shadow-sm">
-                        <div class="bg-lemon-500 p-1.5 rounded-full shadow-sm text-white flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
+
+                    <div class="bg-white/80 rounded-3xl p-4 border border-lemon-200 shadow-sm">
+                        <div class="flex items-center gap-2 mb-2 text-brown-600 font-bold text-[12px]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-lemon-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            โอนแล้วแจ้งสลิปทุกครั้ง
                         </div>
-                        <div class="text-[13px] leading-relaxed text-brown-600 font-medium">
-                            โอนผิด โอนใหม่ ไม่โอนคืนนะคะ!<br>
-                            <span class="text-brown-400 text-[12px] font-normal flex items-center gap-1">รบกวนเช็คชื่อและเลขบัญชีให้ดีก่อนโอนน้า</span>
+                        <p class="text-[11px] text-brown-500 leading-relaxed">
+                            แปะสลิป + <span class="text-brown-700 font-bold">QR ID / ลิ้งค์ไลน์</span> ที่ใช้เข้ากลุ่มทิ้งไว้ได้เลย มิ้นจะรีบดึงเข้ากลุ่มให้ไวที่สุดเลยค่า
+                        </p>
+                    </div>
+
+                    <div class="bg-red-50 border border-red-100 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 text-red-600 font-bold text-[12px] mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                            คำเตือน : โปรดระวังผู้แอบอ้าง
                         </div>
+                        <p class="text-[10px] text-red-500 font-medium">
+                            ไม่อนุญาตให้นำข้อมูลไปแอบอ้างทุกกรณี หากพบเจอ <span class="underline">ดำเนินคดีตามกฎหมายให้ถึงที่สุด</span> ไม่สนว่าจะเป็นเด็กหรือผู้ใหญ่ค่ะ
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="text-center flex flex-col items-center justify-center gap-1.5 text-[11px] text-brown-400 pt-1 relative z-10">
-            <div class="flex items-center gap-1 font-medium text-brown-600">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-lemon-500 anim-pulse">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
-                </svg>
-                ปกติจะตอบกลับไม่เกิน 5-10 นาทีค่า
-            </div>
-            (หากไม่ติดธุระน้า)
+        <div class="text-center text-[10px] text-brown-400 pt-2 opacity-80">
+            ปกติมิ้นจะตอบกลับและดึงเข้ากลุ่มไม่เกิน 5-10 นาทีค่า 🍋❤
         </div>
     </div>
+
     <script>
-        function copyText(text, containerElement, type) {
+        function copyText(text, containerElement) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-999999px";
             document.body.appendChild(textArea);
             textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast();
-                const buttonElement = containerElement.querySelector('.kbank-btn');
-                const originalHtml = buttonElement.innerHTML;
-                buttonElement.innerHTML = `สำเร็จ`;
-                buttonElement.classList.replace('bg-lemon-400', 'bg-green-500');
-                buttonElement.classList.replace('text-brown-700', 'text-white');
-                setTimeout(() => {
-                    buttonElement.innerHTML = originalHtml;
-                    buttonElement.classList.replace('bg-green-500', 'bg-lemon-400');
-                    buttonElement.classList.replace('text-white', 'text-brown-700');
-                }, 2000);
-            } catch (err) { console.error('Error:', err); }
+            document.execCommand('copy');
             document.body.removeChild(textArea);
+            
+            showToast();
+            const btn = containerElement.querySelector('.kbank-btn');
+            const original = btn.innerHTML;
+            btn.innerHTML = 'คัดลอกแล้ว';
+            btn.style.backgroundColor = '#22c55e';
+            btn.style.color = '#fff';
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+            }, 2000);
         }
 
         function showToast() {
             const toast = document.getElementById('toast');
-            toast.classList.remove('opacity-0', 'translate-y-4');
-            toast.classList.add('opacity-100', 'translate-y-0');
+            toast.classList.replace('opacity-0', 'opacity-100');
+            toast.classList.replace('translate-y-4', 'translate-y-0');
             setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-0');
-                toast.classList.add('opacity-0', 'translate-y-4');
-            }, 2500);
+                toast.classList.replace('opacity-100', 'opacity-0');
+                toast.classList.replace('translate-y-0', 'translate-y-4');
+            }, 2000);
         }
     </script>
 </body>
